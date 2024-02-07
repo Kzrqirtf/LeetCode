@@ -32,7 +32,43 @@ public:
         
     }
 };
-
+// class MyStack {
+//     queue<int> q1;
+//     queue<int> q2;
+//     int topEle;
+// public:
+//     MyStack() {
+        
+//     }
+    
+//     void push(int x) {
+//         q2.push(x);
+//         while(!q1.empty()){
+//             q2.push(q1.front());
+//             q1.pop();
+//         }
+//         queue<int> temp = q2;
+//         q2=q1;
+//         q1=temp;
+//     }
+    
+//     int pop() {
+//         int x = q1.front();
+//         q1.pop();
+//         return x;
+//         }
+//     int top() {
+//         return q1.front();
+//     }
+    
+//     bool empty() {
+//         if(!q1.empty()){
+//             return false;
+//         }
+//         else 
+//         return true;
+//     }
+// };
 /**
  * Your MyStack object will be instantiated and called as such:
  * MyStack* obj = new MyStack();
