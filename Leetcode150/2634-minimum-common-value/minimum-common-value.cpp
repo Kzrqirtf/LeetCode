@@ -27,6 +27,7 @@ public:
         // }
 
         // return -1;
+        //most optimised
         int a = 0 , b = 0;
         bool flag = true;
         while(flag && a<nums1.size() && b<nums2.size())
