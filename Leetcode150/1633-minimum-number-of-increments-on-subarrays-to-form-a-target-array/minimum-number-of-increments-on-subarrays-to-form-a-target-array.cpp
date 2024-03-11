@@ -1,14 +1,16 @@
 class Solution {
 public:
     int minNumberOperations(vector<int>& target) {
-        int ans = target[0];
-        int prev = target[0];
-        for (int i = 1; i < target.size(); i++) {
-            if (target[i] > prev) {
-                ans += target[i] - prev;
-            }
-            prev = target[i];
+        stack<int> st;
+        st.push(0);
+        int count = 0;
+        for (int i : target) {
+            if (i > st.top())
+                count += i - st.top();
+            while (st.top() > i)
+                st.pop();
+            st.push(i);
         }
-        return ans;
+        return count;
     }
 };
