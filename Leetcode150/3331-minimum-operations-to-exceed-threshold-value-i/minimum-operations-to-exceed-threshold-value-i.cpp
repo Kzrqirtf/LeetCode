@@ -6,7 +6,7 @@ public:
         int ans=0;
         for(auto i:nums) 
         {
-            if(i<k)ans++;
+            ans=(i<k)?ans+1:ans;
         }
         return ans;
         
