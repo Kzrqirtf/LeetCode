@@ -1,94 +1,57 @@
-
-// class Solution {
-// public:
-//     void bfs(vector<vector<int>>& mat, int step, int x, int y)
-//     {
-//         int dx[4] = {0, 0, 1, -1};
-//         int dy[4] = {1, -1, 0, 0};
-//         queue<pair<int, int>> q;
-//         q.push({x, y});
-//         vector<vector<bool>> visited(mat.size(), vector<bool>(mat[0].size(), false));
-//         visited[x][y] = true;  
-
-//         while (!q.empty()) {
-//             int i = q.front().first;
-//             int j = q.front().second;
-//             q.pop();
-//             step++;
-
-//             for (int a = 0; a < 4; a++) {
-//                 int xx = dx[a] + i;
-//                 int yy = dy[a] + j;
-//                 if (xx < 0 || yy < 0 || xx >= mat.size() || yy >= mat[0].size()) {
-//                     continue;
-//                 }
-//                 if (mat[xx][yy] == 0) {
-//                     mat[x][y] = step;
-//                     return;
-//                 }
-//                 if (!visited[xx][yy]) {
-//                     visited[xx][yy] = true;
-//                     q.push({xx, yy});
-//                 }
-//             }
-//         }
-//     }
-
-//     vector<vector<int>> updateMatrix(vector<vector<int>>& mat)
-//     {
-//         // Iterate over the matrix and perform BFS for each non-zero element
-//         for (int i = 0; i < mat.size(); i++) {
-//             for (int j = 0; j < mat[i].size(); j++) {
-//                 if (mat[i][j] != 0) {
-//                     bfs(mat, 0, i, j);  
-//                 }
-//             }
-//         }
-//         return mat;
-//     }
-// };
-
 class Solution {
 public:
-    vector<vector<int>> updateMatrix(vector<vector<int>>& mat) {
-        int rows = mat.size();
-        int cols = mat[0].size();
-        queue<pair<int, int>> q;
-        vector<vector<int>> dist(rows, vector<int>(cols, INT_MAX)); // Initialize distances with a large number
+    vector<vector<int>> updateMatrix(vector<vector<int>>& grid) {
+        int n = grid.size(); 
+        int m = grid[0].size(); 
+
+        // visited and distance matrix
+        vector<vector<int>> vis(n, vector<int>(m, 0)); 
+        vector<vector<int>> dist(n, vector<int>(m, 0)); 
         
-        // Add all 0s to the queue and set their distance to 0
-        for (int i = 0; i < rows; i++) {
-            for (int j = 0; j < cols; j++) {
-                if (mat[i][j] == 0) {
-                    q.push({i, j});
-                    dist[i][j] = 0;
+        // <coordinates, steps>
+        queue<pair<pair<int,int>, int>> q; 
+
+        // Traverse the matrix
+        for(int i = 0; i < n; i++) {
+            for(int j = 0; j < m; j++) {
+                // Start BFS if cell contains 0
+                if(grid[i][j] == 0) {
+                    q.push({{i, j}, 0}); 
+                    vis[i][j] = 1;  // mark visited
+                } else {
+                    // Mark unvisited for non-zero cells
+                    vis[i][j] = 0; 
                 }
             }
         }
         
-        // Directions for moving in the grid (right, left, down, up)
-        int dx[4] = {0, 0, 1, -1};
-        int dy[4] = {1, -1, 0, 0};
+        // Possible directions: up, right, down, left
+        int delrow[] = {-1, 0, +1, 0}; 
+        int delcol[] = {0, +1, 0, -1}; 
         
-        // Multi-source BFS from all 0s
-        while (!q.empty()) {
-            int x = q.front().first;
-            int y = q.front().second;
-            q.pop();
+        // Traverse till queue becomes empty
+        while(!q.empty()) {
+            int row = q.front().first.first; 
+            int col = q.front().first.second; 
+            int steps = q.front().second; 
+            q.pop(); 
             
-            for (int a = 0; a < 4; a++) {
-                int xx = x + dx[a];
-                int yy = y + dy[a];
+            dist[row][col] = steps;  // Set the distance of the current cell
+            
+            // For all 4 neighbors (up, right, down, left)
+            for(int i = 0; i < 4; i++) {
+                int nrow = row + delrow[i]; 
+                int ncol = col + delcol[i]; 
                 
-                // Check if the new position is within bounds and update distance if necessary
-                if (xx >= 0 && yy >= 0 && xx < rows && yy < cols && dist[xx][yy] > dist[x][y] + 1) {
-                    dist[xx][yy] = dist[x][y] + 1;
-                    q.push({xx, yy});
+                // Check if neighbor is within bounds and unvisited
+                if(nrow >= 0 && nrow < n && ncol >= 0 && ncol < m && vis[nrow][ncol] == 0) {
+                    vis[nrow][ncol] = 1;  // Mark as visited
+                    q.push({{nrow, ncol}, steps + 1});  // Add to queue with incremented steps
                 }
             }
         }
         
-        return dist;
+        // Return the distance matrix
+        return dist; 
     }
 };
-
